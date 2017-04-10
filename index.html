@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel = "stylesheet" href = "layout.css">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-latest.js"></script>
+    <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
+    <link rel="stylesheet" href="main.css">
+    
+  </head>
+
+  <body>
+    <div class = "wrapper">
+	
+
+	<div class="nav">
+	<div class="container">
+		<ul class="pull-left">
+			<li><a href= "/index.html">StrengthHub</a></li>
+		</ul>
+		<ul class="pull-right">
+			<li><button id="logout">Log Out</button></li>
+			<li><a id = "current-user"></a></li>
+			
+			<li><a href= "/about.html">About</a></li>
+			<li><a href = "/sign_up.html">Sign Up</a></li>
+			<li><a href= "/log_in.html">Log In</a></li>
+			<li><a href= "/custom.html">Custom</a></li>
+		</ul>
+	</div>
+	</div>
+
+    <div class="jumbotron">
+      <div class="container">
+        
+        <h1>Brand New Powerlifting App.</h1>
+        <p>Connect with powerlifting coaches from around the world to help choose a lifting program that is right for you.</p>
+        <a href="#">Learn More</a>
+      </div>
+    </div> 
+    <div class="neighborhood-guides">
+    <div class="container">
+    <h2>What we can do for you</h2>
+    <p>Not only does StrengthHub provide you with a means to get in contact with a couch, but we also have an ios app that will help keep track of your workouts.</p>
+
+    <div class="row">
+     <div class="col-md-4">
+    <div class="thumbnail">
+      <img src="/images/IMG_0606.JPG" >
+    </div>
+
+    <div class="thumbnail">
+      <img src="/images/IMG_0646.JPG" >
+    </div>
+  </div>
+      <div class="col-md-4">
+    <div class="thumbnail">
+      <img src="/images/IMG_0664.JPG" >
+    </div>
+    <div class="thumbnail">
+      <img src="/images/IMG_0800.JPG">
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <img src="/images/John_Bench.jpg" >
+    </div>
+  </div>
+</div>
+    <div class="learn-more">
+	  <div class="container">
+		<div class="row">
+	      <div class="col-md-4">
+			<h3>Contact Coaches</h3>
+			<p>Get in touch with coaches from around the world to help kick start your program.</p>
+			<p><a href="#">Click here to learn more about our coaches</a></p>
+	      </div>
+		  <div class="col-md-4">
+			<h3>Keep track of Workouts</h3>
+			<p>You will be able to make note of your PR's and lifting stats for you and your coach to see.</p>
+			<p><a href="#">Learn more about lifting programs here</a></p>
+		  </div>
+		  <div class="col-md-4">
+			<h3>Take video to share with friends and checkout your form</h3>
+			<p>Keep track of your workouts by taking video of your form so you and everyone one else can see.</p>
+			<p><a href="#">Learn about video sharing here</a></p>
+		  </div>
+	    </div>
+	    <div class = "push"></div>
+	  </div>
+	</div>
+	</div>
+    </div>
+	  <script type="text/javascript">
+		Parse.initialize("vZ3BXF5bedh4sjHbcDliiZhhpS5kzmPQ4mB4dmDS", "roWkG50OcgQcAGxVgl4UG3qE92DHM4dwlaIbb2Sd");
+		
+		function checkLogin(){
+			if (Parse.User.current()) {
+				//console.log("logged in"+Parse.User.current().get("username"));
+				
+				$("#current-user").html("User: "+Parse.User.current().get("username"));
+				$("#current-user").show;
+				$("#logout").show();
+			} else{
+				$("#current-user").html("");
+				$("#current-user").hide;
+				$("#logout").hide();
+			}
+		}
+		checkLogin();
+		
+		$("#logout").click(function(event){
+			Parse.User.logOut();
+			checkLogin();
+		});
+		
+		$("#login").submit(function(event){
+			event.preventDefault();
+			
+			var name = $("#login-name").val();
+			var pass = $("#login-password").val();
+			
+			Parse.User.LogIn(name, pass, {
+			success:  function(){
+				//console.log("Log in success!")
+				checkLogin();
+			}, 
+			error:  function(user,error){
+				console.log("Log in error:" + error.message);
+			}});
+		});
+
+		// this is what we will use for our user signup 
+		$("#signup").submit(function(event){
+			event.preventDefault();
+			
+			var name = $("#signup-name").val();
+			var pass = $("#signup-password").val();
+			
+			var user = new Parse.User();
+			user.set("username", name);
+			user.set("password", pass);
+			
+			user.signUp(null,{
+				success: function(user){
+					checkLogin();
+				}, error: function(user,error){
+					console.log("signup error:"+error.message);
+				}
+			});
+		})
+	  </script>
+
+	  <div class = "footer">
+	  	<p>Photos courtesy of <a href="https://www.facebook.com/jjkim521">John Kim</a></p>
+	  </div>
+  </body>
+</html>

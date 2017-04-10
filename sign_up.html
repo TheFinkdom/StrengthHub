@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/styles.css">
+		<link rel = "stylesheet" href = "layout.css">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="http://www.parsecdn.com/js/parse-latest.js"></script>
+		<link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
+		<link rel="stylesheet" href="main.css">
+		
+	</head>
+	
+	<body>
+
+		<div class="nav">
+		<div class="container">
+			<ul class="pull-left">
+				<li><a href="/index.html">StrengthHub</a></li>
+			</ul>
+			<ul class="pull-right">
+				<li><button id="logout">Log Out</button></li>
+				<li><a id = "current-user"></a></li>
+				
+				<li><a href="/about.html">About</a></li>
+				<li><a href="/sign_up.html">Sign Up</a></li>
+				<li><a href="/log_in.html">Log In</a></li>
+				<li><a href= "/custom.html">Custom</a></li>
+			</ul>
+		</div>
+		</div>
+		<div class="signup">
+			<form id="signup">
+				<fieldset>
+					<legend>Sign Up</legend>
+						<input type="radio" id="sex" value="male">Male<br>
+						<input type="radio" id="sex" value="female">Female
+						
+					
+					
+					<p>Username:<br>
+						<input id="signup-name" type="text"><br>
+						Password:<br>
+						<input id="signup-password" type="password"><br>
+						Email:<br>
+						<input id="signup-email" type="email"><br>
+						<input id="signup-submit" type="submit">
+					</p>
+				</fieldset>
+			</form>
+		</div>
+		
+		
+		
+		<script type="text/javascript">
+			Parse.initialize("vZ3BXF5bedh4sjHbcDliiZhhpS5kzmPQ4mB4dmDS", "roWkG50OcgQcAGxVgl4UG3qE92DHM4dwlaIbb2Sd");
+			
+			function checkLogin(){
+				if (Parse.User.current()) {
+					//console.log("logged in"+Parse.User.current().get("username"));
+					
+					$("#current-user").html("User: "+Parse.User.current().get("username"));
+					$("#current-user").show;
+					$("#logout").show();
+				} else{
+					$("#current-user").html("");
+					$("#current-user").hide;
+					$("#logout").hide();
+				}
+			}
+			checkLogin();
+			
+			$("#logout").click(function(event){
+				Parse.User.logOut();
+				checkLogin();
+			});
+			
+			
+			$("#signup").submit(function(event){
+				event.preventDefault();
+				var sex = $("#sex").val();
+				var name = $("#signup-name").val();
+				var pass = $("#signup-password").val();
+				var email= $("#signup-email").val();
+				
+				var user = new Parse.User();
+
+				user.set("username", name);
+				user.set("password", pass);
+				user.set("email",email);
+				
+				user.set("Sex",sex);
+			
+
+				user.signUp(null,{
+					success: function(user){
+						checkLogin();
+					}, error: function(user,error){
+						console.log("signup error:"+error.message);
+					}
+				});
+			});			
+			
+			
+		</script>
+	
+	</body>
+</html>

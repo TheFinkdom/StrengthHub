@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/styles.css">
+		<link rel = "stylesheet" href = "layout.css">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="http://www.parsecdn.com/js/parse-latest.js"></script>
+		<link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
+		<link rel="stylesheet" href="main.css">
+		
+	</head>
+	
+	
+	
+	<body>
+
+		<div class="nav">
+		<div class="container">
+			<ul class="pull-left">
+				<li><a href= "/index.html">StrengthHub</a></li>
+			</ul>
+			<ul class="pull-right">
+				<li><button id="logout">Log Out</button></li>
+				<li><a id = "current-user"></a></li>
+			
+				<li><a href= "/about.html">About</a></li>
+				<li><a href = "/sign_up.html">Sign Up</a></li>
+				<li><a href= "/log_in.html">Log In</a></li>
+				<li><a href= "/custom.html">Custom</a></li>
+
+			</ul>
+		</div>
+		</div>
+		<h2>Custom Workout</h2>
+		<h4>Program Name</h4>
+		<div class="custom-workout">
+			<form id = "custom-name">
+				<p><input id="custom-name" type="text"></p>
+			</form>
+			<ul class="pull-left">
+				<li>Exercise</li>
+				<li>Day</li>
+				<li>Reps</li>
+				<li>Set</li>
+				<li>Weight</li>
+			</ul>
+			
+			<div class="plan">
+				<form id = "customworkout">
+				<ul class="pull-left">
+					<span id="fooBar">&nbsp;</span>
+				</ul>
+				<ul class="pull-right">
+					<input type="button" value="Add" id="add" onclick="Addline()" />
+				</ul>
+				</form>
+			</div>
+			<p><input id = "submit-workout" type = "submit"></p>
+		
+		</div>
+		
+		<script type="text/javascript">
+			Parse.initialize("vZ3BXF5bedh4sjHbcDliiZhhpS5kzmPQ4mB4dmDS", "roWkG50OcgQcAGxVgl4UG3qE92DHM4dwlaIbb2Sd");
+			var count = 1;
+			var exercise = [];
+			var day = [];
+			var reps = [];
+			var set = [];
+			var weight = [];
+			
+			function checkLogin(){
+				if (Parse.User.current()) {
+					//console.log("logged in"+Parse.User.current().get("username"));
+					
+					$("#current-user").html("User: "+Parse.User.current().get("username"));
+					$("#current-user").show;
+					$("#logout").show();
+				} else{
+					$("#current-user").html("");
+					$("#current-user").hide;
+					$("#logout").hide();
+				}
+			}
+			checkLogin();
+			
+			$("#logout").click(function(event){
+				Parse.User.logOut();
+				checkLogin();
+			});
+			$('#add').click(function(e){
+				e.preventDefault();
+				count++;
+			});
+			function Addline(){
+			
+				var foo = document.getElementById("fooBar");
+			
+				br = document.createElement("br");
+				exercise[exercise.length] = document.createElement("input");
+				day[day.length] = document.createElement("input");
+				reps[reps.length] = document.createElement("input");
+				set[set.length] = document.createElement("input");
+				weight[weight.length] = document.createElement("input");
+				
+				exercise[exercise.length].setAttribute("type","text" );
+				
+				day[day.length].setAttribute("type","number" );
+				
+				reps[reps.length].setAttribute("type","number" );
+				
+				set[set.length].setAttribute("type", "number");
+				
+				weight[weight.length].setAttribute("type", "number");
+
+			
+ 
+
+				
+				//Append the line in page (in span).
+				foo.appendChild(br);
+				
+				foo.appendChild(exercise[exersise.length]);
+				foo.appendChild(day[day.length]);
+				foo.appendChild(reps[reps.length]);
+				foo.appendChild(set[set.length]);
+				foo.appendChild(weight[weight.length]);
+				
+				foo.appendChild(br);
+				
+			}
+			$("#customworkout").submit(function(event){
+				event.preventDefault();
+				var user = Parse.User.current();
+				var custom_name = Parse.Object.extend("Custom_Name");
+				var custom_workout = Parse.Object.extend("Custom_Workout");
+				
+				custom_name = new Custom_Name();
+				custom_workout = new Custom_Workout();
+				
+				custom_name.set({
+					Name: ("custom_name", custom_name)
+				});
+				for(i=0;i<=count;i++){
+					custom-workout.set({
+						exercise:("Exercise",exercise[i]),
+						day:("Day",day[i]),
+						reps:("Reps",reps[i]),
+						set:("Set",set[i]),
+						weight:("Weight",weight[i])
+					});
+				}
+				custom_name.save();
+				custom_workout.save();
+				
+			
+			
+			custom_name.then(function(){
+				var custom_name_relation = User.relation('Custom_Name');
+				custom_name_relation.add(custom_name);
+				
+				return User.save();
+			})
+			custom_workout.then(function(){
+				var custom_workout_relation = Custom_Name.relation('Custom_Workout');
+				custom_workout_relation.add(custom_workout);
+				
+				return User.save();
+			})
+			
+			})
+		</script>
+	
+	
+	
+	</body>
+	
+</html>
